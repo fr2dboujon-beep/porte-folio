@@ -138,8 +138,6 @@ nav a:hover{color:var(--molten)}
 .row-nav button{all:unset;cursor:pointer;width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--rule);color:var(--paper);font:600 1.2rem/1 var(--body);transition:border-color .2s,color .2s}
 .row-nav button:hover{border-color:var(--molten);color:var(--molten)}
 .row-nav button:focus-visible{outline:2px solid var(--molten);outline-offset:2px}
-.rail.auto{scroll-snap-type:none;scroll-behavior:auto}
-.row{position:relative}
 .rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-block:14px;scrollbar-width:thin;scrollbar-color:var(--rule) transparent;overscroll-behavior-x:contain}
 .rail:focus-visible{outline:2px solid var(--molten);outline-offset:2px}
 .tile{all:unset;box-sizing:border-box;position:relative;flex:0 0 clamp(128px,14vw,172px);aspect-ratio:2/3;max-width:100%;background-color:var(--ink-2);background-position:center top;background-size:cover;background-repeat:no-repeat;cursor:pointer;scroll-snap-align:start;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 0 0 1px var(--rule)}
@@ -504,39 +502,6 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
   if('IntersectionObserver' in window)new IntersectionObserver(function(e){inView=e[0].isIntersecting;inView?start():stop();}).observe(cv);
   var go=function(){build();start();};
   (document.fonts&&document.fonts.ready)?document.fonts.ready.then(go):window.addEventListener('load',go);
-})();
-</script>
-
-<script>
-/* hoverScroll : les vignettes avancent toutes seules quand la souris approche d'un bord */
-(function(){
-  if(!window.matchMedia||!matchMedia('(hover: hover) and (pointer: fine)').matches)return;
-  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var ZONE=.22,MAX=reduce?6:13;
-  document.querySelectorAll('.rail').forEach(function(rail){
-    var v=0,raf=0,row=rail.closest('.row');
-    function step(){
-      if(!v){raf=0;return;}
-      var before=rail.scrollLeft;rail.scrollLeft+=v;
-      if(rail.scrollLeft===before){v=0;raf=0;return;}
-      raf=requestAnimationFrame(step);
-    }
-    function go(speed){v=speed;if(v){rail.classList.add('auto');if(!raf)raf=requestAnimationFrame(step);}}
-    function stop(){v=0;rail.classList.remove('auto');}
-    rail.addEventListener('mousemove',function(e){
-      var r=rail.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,s=0;
-      if(x<ZONE)s=-Math.pow((ZONE-x)/ZONE,1.6)*MAX;
-      else if(x>1-ZONE)s=Math.pow((x-(1-ZONE))/ZONE,1.6)*MAX;
-      if(Math.abs(s)<.6)s=0;
-      if(s)go(s);else v=0;
-    });
-    rail.addEventListener('mouseleave',stop);
-    rail.addEventListener('mousedown',stop);
-    if(row)row.querySelectorAll('[data-scroll]').forEach(function(b){
-      b.addEventListener('mouseenter',function(){go((+b.dataset.scroll)*MAX*.8);});
-      b.addEventListener('mouseleave',stop);
-    });
-  });
 })();
 </script>
 
