@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Frédéric Boujon</title>
+<title>FR3D Studio Graphik</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Frédéric Boujon, Product Builder freelance. L'écoute d'un commercial, l'œil d'un peintre, la vitesse de l'IA.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,12 +75,14 @@ nav a:hover{color:var(--molten)}
 /* Nom en feu */
 .fire{position:relative}
 .fire h1{position:relative;z-index:1}
-.fire h1 span{display:table;background:linear-gradient(to top,var(--flame-core) 0%,var(--flame-hot) 22%,var(--molten) 45%,var(--flame-deep) 70%,var(--molten) 85%,var(--flame-hot) 100%);background-size:100% 220%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:heat 4.5s ease-in-out infinite alternate,glow 5s linear infinite}
-.fire h1 span:first-child{animation-delay:-1.3s,-.8s}
+.fire h1{display:flex;flex-direction:column;gap:clamp(6px,1.2vw,14px)}
+.fire .logo{display:block;width:min(100%,680px);height:auto;animation:glow 5s linear infinite}
+.fire .sub{display:block;font:800 clamp(1.4rem,3.6vw,2.6rem)/1 var(--display);letter-spacing:.32em;text-transform:uppercase;color:var(--paper);padding-left:.2em}
+.fire .sub b{color:var(--molten);font-weight:800}
 @keyframes heat{from{background-position:0 0%}to{background-position:0 100%}}
 @keyframes glow{0%,100%{filter:drop-shadow(0 0 14px rgba(255,110,20,.45))}18%{filter:drop-shadow(0 0 22px rgba(255,120,30,.7))}31%{filter:drop-shadow(0 0 10px rgba(255,90,10,.35))}52%{filter:drop-shadow(0 0 26px rgba(255,140,40,.75))}70%{filter:drop-shadow(0 0 12px rgba(255,100,20,.4))}84%{filter:drop-shadow(0 0 20px rgba(255,130,30,.6))}}
 #flames{position:absolute;left:0;width:100%;top:-30%;height:130%;pointer-events:none;z-index:2;mix-blend-mode:screen}
-@media (prefers-reduced-motion:reduce){.fire h1 span{animation:none;filter:drop-shadow(0 0 16px rgba(255,110,20,.5))}#flames{display:none}}
+@media (prefers-reduced-motion:reduce){.fire .logo{animation:none;filter:drop-shadow(0 0 16px rgba(255,110,20,.5))}#flames{display:none}}
 
 /* Parcours */
 .timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:4px solid var(--paper)}
@@ -138,6 +140,8 @@ nav a:hover{color:var(--molten)}
 .row-nav button{all:unset;cursor:pointer;width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--rule);color:var(--paper);font:600 1.2rem/1 var(--body);transition:border-color .2s,color .2s}
 .row-nav button:hover{border-color:var(--molten);color:var(--molten)}
 .row-nav button:focus-visible{outline:2px solid var(--molten);outline-offset:2px}
+.rail.auto{scroll-snap-type:none;scroll-behavior:auto}
+.row{position:relative}
 .rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-block:14px;scrollbar-width:thin;scrollbar-color:var(--rule) transparent;overscroll-behavior-x:contain}
 .rail:focus-visible{outline:2px solid var(--molten);outline-offset:2px}
 .tile{all:unset;box-sizing:border-box;position:relative;flex:0 0 clamp(128px,14vw,172px);aspect-ratio:2/3;max-width:100%;background-color:var(--ink-2);background-position:center top;background-size:cover;background-repeat:no-repeat;cursor:pointer;scroll-snap-align:start;transition:transform .25s ease,box-shadow .25s ease;box-shadow:0 0 0 1px var(--rule)}
@@ -217,7 +221,7 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
 
 <header class="hero">
   <div>
-    <div class="fire"><h1 id="name"><span>Frédéric</span><span class="o">Boujon</span></h1><canvas id="flames" aria-hidden="true"></canvas></div>
+    <div class="fire"><h1 id="name"><img class="logo" src="img/logo.webp" alt="FR3D" width="1400" height="514"><span class="sub">Studio <b>Graphik</b></span></h1><canvas id="flames" aria-hidden="true"></canvas></div>
     <p class="role label">Product Builder freelance</p>
     <p class="pitch">L'écoute d'un commercial, l'œil d'un peintre, la vitesse de l'IA&nbsp;: je conçois des produits digitaux beaux et utiles pour les indépendants et les petites entreprises.</p>
     <div class="tags label"><span>35 ans de terrain</span><span>Peinture &amp; graphisme</span><span>Sites &amp; applis avec l'IA</span></div>
@@ -465,16 +469,13 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
     var k=.5,oc=document.createElement('canvas');oc.width=Math.ceil(W*k);oc.height=Math.ceil(H*k);
     var o=oc.getContext('2d');o.scale(k,k);o.fillStyle='#fff';o.textBaseline='alphabetic';
     var fs=100;
-    h1.querySelectorAll('span').forEach(function(sp){
-      var cs=getComputedStyle(sp),b=sp.getBoundingClientRect();fs=parseFloat(cs.fontSize)||fs;
-      o.font=cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;
-      try{o.letterSpacing=cs.letterSpacing}catch(e){}
-      var t=sp.textContent.toUpperCase(),m=o.measureText(t);
-      var asc=m.fontBoundingBoxAscent||fs*.8,desc=m.fontBoundingBoxDescent||fs*.2;
-      o.fillText(t,b.left-r.left,b.top-r.top+(b.height-(asc+desc))/2+asc);
-    });
+    var lg=h1.querySelector('.logo'),sub=h1.querySelector('.sub');
+    if(lg&&lg.complete&&lg.naturalWidth){var lb=lg.getBoundingClientRect();o.drawImage(lg,lb.left-r.left,lb.top-r.top,lb.width,lb.height);fs=lb.height*.7;}
+    if(sub){var cs=getComputedStyle(sub),sb=sub.getBoundingClientRect();o.font=cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;try{o.letterSpacing=cs.letterSpacing}catch(e){}
+      o.fillText(sub.textContent.toUpperCase(),sb.left-r.left+parseFloat(cs.paddingLeft||0),sb.bottom-r.top-sb.height*.12);}
     sc=fs/180;
-    var d=o.getImageData(0,0,oc.width,oc.height).data,w=oc.width,step=w*4*2;pts=[];
+    var d;try{d=o.getImageData(0,0,oc.width,oc.height).data;}catch(e){pts=[];if(lg){var q=lg.getBoundingClientRect();for(var x=q.left;x<q.right;x+=3)pts.push(x-r.left,q.top-r.top+q.height*.18);}sc=fs/180;return;}
+    var w=oc.width,step=w*4*2;pts=[];
     for(var y=2;y<oc.height;y++)for(var x=0;x<w;x++){var i=(y*w+x)*4+3;if(d[i]>128&&d[i-step]<40)pts.push(x/k,y/k);}
   }
   function spawn(n){
@@ -501,7 +502,41 @@ footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;paddin
   document.addEventListener('visibilitychange',function(){document.hidden?stop():start();});
   if('IntersectionObserver' in window)new IntersectionObserver(function(e){inView=e[0].isIntersecting;inView?start():stop();}).observe(cv);
   var go=function(){build();start();};
+  var lgi=h1.querySelector('.logo');if(lgi&&!lgi.complete)lgi.addEventListener('load',function(){parts=[];build();});
   (document.fonts&&document.fonts.ready)?document.fonts.ready.then(go):window.addEventListener('load',go);
+})();
+</script>
+
+<script>
+/* hoverScroll : les vignettes avancent toutes seules quand la souris approche d'un bord */
+(function(){
+  if(!window.matchMedia||!matchMedia('(hover: hover) and (pointer: fine)').matches)return;
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ZONE=.22,MAX=reduce?6:13;
+  document.querySelectorAll('.rail').forEach(function(rail){
+    var v=0,raf=0,row=rail.closest('.row');
+    function step(){
+      if(!v){raf=0;return;}
+      var before=rail.scrollLeft;rail.scrollLeft+=v;
+      if(rail.scrollLeft===before){v=0;raf=0;return;}
+      raf=requestAnimationFrame(step);
+    }
+    function go(speed){v=speed;if(v){rail.classList.add('auto');if(!raf)raf=requestAnimationFrame(step);}}
+    function stop(){v=0;rail.classList.remove('auto');}
+    rail.addEventListener('mousemove',function(e){
+      var r=rail.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,s=0;
+      if(x<ZONE)s=-Math.pow((ZONE-x)/ZONE,1.6)*MAX;
+      else if(x>1-ZONE)s=Math.pow((x-(1-ZONE))/ZONE,1.6)*MAX;
+      if(Math.abs(s)<.6)s=0;
+      if(s)go(s);else v=0;
+    });
+    rail.addEventListener('mouseleave',stop);
+    rail.addEventListener('mousedown',stop);
+    if(row)row.querySelectorAll('[data-scroll]').forEach(function(b){
+      b.addEventListener('mouseenter',function(){go((+b.dataset.scroll)*MAX*.8);});
+      b.addEventListener('mouseleave',stop);
+    });
+  });
 })();
 </script>
 
